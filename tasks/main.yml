@@ -1,0 +1,20 @@
+---
+- stat:
+    path: /boot/grub/grub.conf
+    follow: yes
+  register: grub_conf
+
+- name: Removing splash image from the /boot/grub/grub.conf file
+  lineinfile:
+    dest: /boot/grub/grub.conf
+    state: absent
+    regexp: '^splashimage='
+  when: grub_conf.stat.exists == True
+
+- name: Removing rhgb from the /boot/grub/grub.conf file
+  replace:
+    dest: /boot/grub/grub.conf
+    regexp: 'rhgb'
+    replace: ''
+    follow: yes
+  when: grub_conf.stat.exists == True
